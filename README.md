@@ -4,6 +4,12 @@ Web estática bilingüe. Cinco páginas: inicio, carta visual con filtros y busc
 
 ## Uso
 
+### Publicar las páginas en Vercel
+
+Importa `Jlproyectia/PatioCordobes` con la rama `main` y Root Directory `./` (la raíz del repositorio, no `patio-web`). El archivo `vercel.json` selecciona el preset Other, omite instalación y compilación, y publica `dist`, donde está `index.html`.
+
+Esta configuración publica las páginas y los archivos multimedia. El servidor de reservas actual usa Cloudflare D1 y un Worker; no se ejecuta en Vercel con esta configuración. Para recibir reservas en Vercel hay que adaptar el servidor y conectar una base de datos persistente y las variables privadas de correo.
+
 `node scripts/redesign.mjs` genera las páginas HTML desde los datos y textos.
 
 `node scripts/serve.mjs` inicia la vista local en http://127.0.0.1:4175.

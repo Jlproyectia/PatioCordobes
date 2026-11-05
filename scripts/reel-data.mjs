@@ -1,0 +1,23 @@
+// Verified feed publications, never stories or highlights. Original videos retained in media/videos.
+export const reelItems = [
+ ['feed-DcloazfsWer','La croqueta de Antonio','Antonio’s favourite croquette','DcloazfsWer'],
+ ['parrilla','La mesa está puesta','The table is ready','DdyjlrDuwJ2'],
+ ['feed-DcEYXz2M5Nm','Noches flamencas','Flamenco nights','DcEYXz2M5Nm'],
+ ['feed-DXaAZ5PjgR1','Nuestra empanada','Our beef empanada','DXaAZ5PjgR1'],
+ ['equipo','Os esperamos en casa','Make yourself at home','DeFS1gcuvbA'],
+ ['feed-DctmXMwur30','Detrás de cada detalle','Behind every detail','DctmXMwur30'],
+ ['feed-DalNe6ZNjGy','El sabor del Wagyu','A taste of Wagyu','DalNe6ZNjGy'],
+ ['bienvenida','Un patio para celebrar','A patio for celebrations','Dc_yHkoMvZD'],
+ ['feed-Db5l80msBx9','El reto de Mely','Mely’s challenge','Db5l80msBx9'],
+ ['feed-DbylyVvuqDm','Para compartir','Made to share','DbylyVvuqDm'],
+ ['boda','Días para recordar','Days to remember','DdjsFEmOLzy'],
+ ['feed-DbqzkmVOeTR','Música en el patio','Music in the patio','DbqzkmVOeTR'],
+ ['en-casa','La vida del patio','Life in the patio','Ddo2ctJtGuE'],
+ ['feed-DX98qznOdt-','Un día muy vuestro','A day of your own','DX98qznOdt-'],
+ ['feed-DaVpu1Cu_Zt','Pasión por la carne','A passion for good meat','DaVpu1Cu_Zt'],
+ ['cocina','Dentro de la cocina','Inside our kitchen','DeuggmKtyGP'],
+ ['feed-DbYyUUOut8z','Cristi y Richi','Cristi and Richi','DbYyUUOut8z'],
+ ['feed-DbG0VRMu5pN','El ojo de Antonio','Antonio’s expert eye','DbG0VRMu5pN'],
+ ['feed-DX4DsNgszGD','Domingos en familia','Family Sundays','DX4DsNgszGD'],
+ ['celebracion','A vuestra manera','Your way','DdHbh4QNQwi'],
+].map(([name,es,en,code])=>[name,es,en,`https://www.instagram.com/patioelcordobes/reel/${code}/`]);

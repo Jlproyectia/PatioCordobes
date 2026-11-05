@@ -1,0 +1,126 @@
+{
+  "tool": "built-in image_gen",
+  "created": "2026-11-05",
+  "images": [
+    {
+      "name": "patio-editorial",
+      "reference": "media/google/patio-hires.jpg",
+      "prompt": "Wide architectural hero photograph, landscape 16:9. Retouch this EXACT real courtyard: same white wall, brick arch, blue flowerpots, curved roof tiles, lanterns, paving, tables. Remove all guests and incidental clutter for an empty before-service photograph. Improve composition and photographic light to soft late-afternoon sun, not sunset orange. Do not invent buildings, luxuries, pools or gardens. Keep the authentic modest Andalusian restaurant. Camera view slightly tighter on the wall and beautiful prepared tables. No text overlays."
+    },
+    {
+      "name": "patio-blue-hour",
+      "reference": "media/google/patio-hires.jpg",
+      "prompt": "Landscape 16:9 editorial evening photograph of THIS same courtyard. Remove guests. Same architecture and furniture, blue pots, white wall, terracotta arch. Blue-hour atmosphere, existing string lights softly glowing, prepared tables. Believable photographic relighting, restrained luxury in photography only, no invented expensive venue."
+    },
+    {
+      "name": "macetas-azules",
+      "reference": "media/google/patio-hires.jpg",
+      "prompt": "Portrait 4:5 detailed photograph cropped onto the actual cobalt-blue plant pots on the white wall. Same pots, green foliage, sunlit plaster texture, a fragment of curved blue roof tile. Calm sophisticated still life. Remove people and visual clutter."
+    },
+    {
+      "name": "mesa-patio",
+      "reference": "media/google/6c9506bc6a7a5e71.jpg",
+      "prompt": "Landscape 4:3 photograph of the actual prepared patio tables, the same blue patterned crockery, ivory linen and existing chairs, blue pots behind. Improve light and composition, morning sunshine, authentic before-service setting. Remove visual clutter, preserve venue. No new furniture."
+    },
+    {
+      "name": "celebracion-editorial",
+      "reference": "media/google/6c9506bc6a7a5e71.jpg",
+      "prompt": "Wide landscape 16:9 celebration editorial. These same long white-linen tables and same patterned plates in this actual patio. Warm evening light, elegant orderly table setting. No people, no fabricated flowers or extravagant fixtures. Real restaurant architecture retained."
+    },
+    {
+      "name": "detalle-mesa",
+      "reference": "media/google/6c9506bc6a7a5e71.jpg",
+      "prompt": "Portrait 4:5 macro editorial of one place setting visible in reference: blue and white patterned plate, ivory tablecloth, silver cutlery and linen napkin. Shallow depth of field, tactile linen, soft window/daylight. Crop to plate and table. No text."
+    },
+    {
+      "name": "entrada-patio",
+      "reference": "media/instagram/perfil/108be8b123625489.jpg",
+      "prompt": "Portrait 4:5 editorial of this EXACT patio entrance. Preserve blue plant pots, white and brick facade, sunflower basket. Remove person, wedding welcome sign, personal photographs, UI rounded corners and text. Compose warmly around doorway and flowers. Same modest venue, premium photography."
+    },
+    {
+      "name": "girasoles",
+      "reference": "media/instagram/perfil/108be8b123625489.jpg",
+      "prompt": "Portrait 4:5 still-life crop of the real sunflowers in wicker basket from the reference, with blurred white patio wall and blue pots. No sign, no people, no text. Beautiful soft natural light, detailed yellow petals and wicker."
+    },
+    {
+      "name": "flamenco-guitarra",
+      "reference": "media/instagram/perfil/14244f07e3d5fb8d.jpg",
+      "prompt": "Portrait 4:5 editorial tight crop of the acoustic guitar and the real musician's hands in the reference. Preserve guitar, hands, black outfit. Frame excludes face, legs, microphone and any lettering. Blue flowerpot and white courtyard softly blurred behind. Natural warm concert lighting."
+    },
+    {
+      "name": "brasa-detalle",
+      "reference": "media/instagram/historias/42d1e270fd93208e.jpg",
+      "prompt": "Wide landscape 16:9 editorial macro photograph of the actual octopus cooking on grill from reference. Low angle with black grill foreground and fine natural rising steam; retain recognisable tentacle texture and authentic cooking. No giant flames, no invented garnish, no lettering or social UI."
+    },
+    {
+      "name": "chuleton-servido",
+      "reference": "media/google/0e673983b73c3687.jpg",
+      "prompt": "Landscape 4:3 premium food editorial of this same COOKED sliced bone-in steak on wooden board with side salad. Preserve doneness and actual portion. Clean composition, side salad smaller in background, focus on juicy cooked meat, warm neutral daylight. No raw meat, no text."
+    },
+    {
+      "name": "carne-macro",
+      "reference": "media/google/0e673983b73c3687.jpg",
+      "prompt": "Portrait 4:5 macro of the same cooked sliced steak with seared crust, rosy interior on wooden board. Tight refined crop, warm daylight, appetising realistic texture, no additional food or lettering."
+    },
+    {
+      "name": "pulpo-plato",
+      "reference": "media/generated/pulpo.png",
+      "prompt": "Landscape 4:3 premium editorial photograph based on the SAME grilled octopus from reference, compose two cooked tentacles on a simple white ceramic plate with only olive oil, keep real texture and char. Background neutral ivory table, tiny out of focus cobalt ceramic detail. Restrained modern Spanish restaurant photography."
+    },
+    {
+      "name": "calamar-plato",
+      "reference": "media/generated/calamar.png",
+      "prompt": "Landscape 4:3 refined food editorial of this exact sliced grilled squid and vegetables, preserve ingredients and portion, place plate on ivory linen, photograph slightly overhead with natural side light. Clean spacious composition, no text."
+    },
+    {
+      "name": "langostinos-plato",
+      "reference": "media/generated/langostinos.png",
+      "prompt": "Landscape 4:3 refined food editorial of the exact grilled prawns in reference on blue-and-white plate. Arrange naturally preserving amount, tasteful ivory linen backdrop, daylight, no additional ingredients, no text."
+    },
+    {
+      "name": "croquetas-plato",
+      "reference": "media/google/13d6362068d3d932.jpg",
+      "prompt": "Landscape 4:3 upscale photo of the same real croquettes with potato crisps on the reference plate. Preserve food, improve crisp texture and natural warm light. Plate centered on ivory linen with subtle cobalt edge detail, no extra food, no text."
+    },
+    {
+      "name": "tomate-melva",
+      "reference": "media/generated/ensalada.png",
+      "prompt": "Landscape 4:3 editorial of the same tomato salad with melva, white onion, green pepper and blue-rimmed ceramic plate. Preserve all actual ingredients, brighter Mediterranean daylight, muted ivory linen. Less stacked, natural served salad, no text."
+    },
+    {
+      "name": "queso-tabla",
+      "reference": "media/generated/tabla.png",
+      "prompt": "Landscape 4:3 refined top-down food photograph of the same cheese assortment with almonds, raisins and strawberries. Single wooden serving board, same ingredients, ivory table and natural light. Generous negative space around board, no meat, no text."
+    },
+    {
+      "name": "provolone-horno",
+      "reference": "media/google/40c05f0e715ff6f3.jpg",
+      "prompt": "Landscape 4:3 premium editorial photo of actual baked provolone in terracotta dish with rustic bread from reference. Preserve melted cheese, oil and herb topping. Full dish visible, clean ivory linen and blue napkin. Warm natural daylight, no invented additional ingredients."
+    },
+    {
+      "name": "ensaladilla-pulpo",
+      "reference": "media/google/2f0697253d8399c3.jpg",
+      "prompt": "Landscape 4:3 editorial photo of the exact cylindrical potato salad topped with grilled octopus and paprika in the reference. Same blue-and-white ornate plate. Remove person's arm/background clutter. Ivory cloth natural daylight, faithful food and portion."
+    },
+    {
+      "name": "tarta-queso-nueva",
+      "reference": "media/google/80d0b0d91e23bab1.jpg",
+      "prompt": "Landscape 4:3 dessert editorial isolate ONLY the triangular baked cheesecake slice from this actual reference, no brownie, no ice cream. Keep its real smooth pale interior and golden-brown top, simple blue ceramic plate on ivory linen, elegant natural daylight. No berries or invented toppings."
+    },
+    {
+      "name": "brownie-chocolate",
+      "reference": "media/google/80d0b0d91e23bab1.jpg",
+      "prompt": "Landscape 4:3 editorial isolate ONLY the chocolate brownie with vanilla ice cream and chocolate drizzle from the actual reference. No cheesecake or extra whipped cream. Dark blue plate ivory linen warm daylight, exquisite real texture, no text."
+    },
+    {
+      "name": "parrillada",
+      "reference": "media/google/e81db6e41db2f71e.jpg",
+      "prompt": "Landscape 4:3 editorial photograph of the actual mixed grilled meats, small potatoes and vegetables on oval metal platter in reference. Preserve cuts and ingredients. Remove people and clutter, whole platter nicely composed on cream table with restrained blue napkin, warm daylight."
+    },
+    {
+      "name": "ensalada-cabra",
+      "reference": "media/google/90855d694754e1e1.jpg",
+      "prompt": "Landscape 4:3 refined overhead photograph of the real goat-cheese salad: seared round goat cheese, dark fruit dressing, lettuce, tomato, nuts visible in reference. Preserve ingredients, improve resolution and plating clarity, white ceramic blue rim, ivory linen daylight. No lettering."
+    }
+  ]
+}

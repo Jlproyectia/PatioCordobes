@@ -1,0 +1,23 @@
+@media(prefers-reduced-motion:no-preference){
+  .patio-motion .organized-image,.patio-motion .gallery-grid figure>div{position:relative;isolation:isolate;transition:box-shadow .45s ease,transform .55s cubic-bezier(.2,.7,.2,1)}
+  .patio-motion .organized-image img,.patio-motion .gallery-grid figure img{transform-origin:var(--look-x,50%) var(--look-y,50%);transition:transform 1s cubic-bezier(.2,.7,.2,1),clip-path 1.15s var(--ease)}
+  .patio-motion .organized-grid figcaption{transition:color .3s ease}
+  .patio-motion .button{transition:background .3s,color .3s,box-shadow .3s,transform .3s}
+  .patio-motion .button>span:last-child,.patio-motion .link>span:last-child,.patio-motion .review-external{display:inline-block;transition:transform .35s cubic-bezier(.2,.7,.2,1)}
+  .patio-motion .button:hover>span:last-child,.patio-motion .link:hover>span:last-child,.patio-motion .review-card:hover .review-external{transform:translate(3px,-3px)}
+  .patio-motion .button:active{transform:scale(.97)}
+  .patio-motion #review-list .review-card{transition:transform .4s,box-shadow .4s,border-color .4s}
+  .patio-motion #review-list .review-card:hover{transform:translateY(-5px);border-color:#9eb9c5;box-shadow:0 12px 28px #123e5812}
+  .patio-motion .avatar{transition:transform .4s,background .4s}
+  .patio-motion .review-card:hover .avatar{transform:rotate(-7deg);background:#d6e6ed}
+  .patio-motion .scroll-cue span{animation:patio-scroll-cue 2s ease-in-out 3}
+  .patio-motion .rosette{transition:transform 1.2s cubic-bezier(.2,.7,.2,1)}
+  .patio-motion .rosette:hover{transform:rotate(90deg)}
+  @keyframes patio-scroll-cue{0%,100%{translate:0 0}50%{translate:0 7px}}
+}
+@media(hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference){
+  .patio-motion .organized-grid figure:hover .organized-image,.patio-motion .gallery-grid figure:hover>div{transform:translateY(-6px);box-shadow:0 16px 30px #123e5820}
+  .patio-motion .organized-grid figure:hover img,.patio-motion .gallery-grid figure:hover img{transform:scale(1.08)}
+  .patio-motion .organized-grid figure:hover figcaption{color:var(--blue)}
+  .patio-motion .button:hover{transform:translateY(-3px);box-shadow:0 7px 18px #123e5820}
+}

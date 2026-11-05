@@ -1,3 +1,11 @@
 qa/
 node_modules/
 *.log
+
+.env
+.env.*
+!.env.example
+.data/
+dist/client/
+dist/server/
+dist/.openai/

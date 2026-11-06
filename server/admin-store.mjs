@@ -1,8 +1,8 @@
-import {get,put,BlobPreconditionFailedError} from '@vercel/blob';
+import {get,head,put,BlobPreconditionFailedError,BlobNotFoundError} from '@vercel/blob';
 import {initialState} from './admin-seed.mjs';
 const file='private/restaurant-state-v1.json';
 export function createBlobStore(){
- async function read(){const result=await get(file,{token:process.env.BLOB_READ_WRITE_TOKEN?.trim(),access:'private',useCache:false});if(!result)return {data:initialState(),etag:null};return {data:await new Response(result.stream).json(),etag:result.blob.etag};}
+ async function read(){const token=process.env.BLOB_READ_WRITE_TOKEN?.trim();let metadata;try{metadata=await head(file,{token})}catch(error){if(error instanceof BlobNotFoundError)return {data:initialState(),etag:null};throw error;}const result=await get(file,{token,access:'private',useCache:false});if(!result)throw new Error('Estado temporalmente no disponible');return {data:await new Response(result.stream).json(),etag:metadata.etag};}
  return {read:async()=> (await read()).data,async transaction(change){
   for(let attempt=0;attempt<5;attempt++){
    const {data,etag}=await read();const result=await change(data);

@@ -59,3 +59,5 @@ Variables privadas: BLOB_READ_WRITE_TOKEN, ADMIN_PIN_HASH (salt:scrypt hexadecim
 El estado usa escrituras condicionales por ETag. Las reservas requieren sesión HttpOnly de ocho horas. Los cambios requieren origen válido y token CSRF. Los intentos de PIN y solicitudes públicas tienen límites persistentes. Las imágenes de carta son públicas mediante un endpoint limitado a ese tipo de archivo.
 
 Validación: npm ci, npm run test:admin y node scripts/verify.mjs. El servidor estático local no ejecuta la función Vercel. Producción se actualiza mediante push a main.
+
+Reels móviles: `dist/film-player.js` reproduce un único vídeo visible, espera al final del deslizamiento y libera los decodificadores fuera de pantalla. Una portada independiente permanece visible hasta recibir un fotograma y cubre esperas, errores y pausas. Reproducción manual disponible con movimiento reducido. Los veinte vídeos se exportan desde los originales a H.264 720p, YUV420p, 30 fps y fast-start, con caudal limitado a 2,2 Mbps. `node scripts/verify-reels.mjs` comprueba formato, dimensiones, portadas y posición del índice MP4.

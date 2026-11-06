@@ -8,8 +8,9 @@ if(reelItems.length!==20 || new Set(reelItems.map(r=>r[3])).size!==20)throw Erro
 const results=reelItems.map(([name,,,url])=>{
  if(!/^https:\/\/www.instagram.com\/patioelcordobes\/reel\//.test(url))throw Error('Not a feed reel: '+url);
  const file=fileURLToPath(new URL(`assets/videos/${name}.mp4`,dist));
- const probe=JSON.parse(execFileSync('ffprobe',['-v','error','-select_streams','v:0','-show_entries','stream=codec_name,width,height,duration','-of','json',file],{encoding:'utf8'}));
- if(!probe.streams[0]?.width)throw Error('Missing video stream: '+name);
+ const probe=JSON.parse(execFileSync('ffprobe',['-v','error','-select_streams','v:0','-show_entries','stream=codec_name,pix_fmt,width,height,duration','-of','json',file],{encoding:'utf8'}));
+ if(probe.streams[0]?.codec_name!=='h264'||probe.streams[0].pix_fmt!=='yuv420p'||probe.streams[0].width<720)throw Error('Expected mobile-compatible H264 at 720p: '+name);
+ const bytes=fs.readFileSync(file);let offset=0,moov=-1,mdat=-1;while(offset+8<=bytes.length){const size=bytes.readUInt32BE(offset),type=bytes.toString('ascii',offset+4,offset+8);if(type==='moov')moov=offset;if(type==='mdat')mdat=offset;if(size<8)break;offset+=size;}if(moov<0||mdat<0||moov>mdat)throw Error('Video is not fast-start: '+name);
  if(!fs.existsSync(new URL(`assets/images/video-${name}.webp`,dist)))throw Error('Missing poster: '+name);
  if(!home.includes(url))throw Error('Missing published slide: '+url);
  return {name,url,...probe.streams[0]};

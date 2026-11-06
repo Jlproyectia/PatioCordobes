@@ -194,3 +194,7 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
 .footer-grid{grid-template-columns:1.15fr .9fr 1fr .9fr 1fr}
 @media(max-width:1100px){.footer-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}}
 @media(max-width:760px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-admin{grid-column:auto}.footer-grid a{overflow-wrap:anywhere}}
+/* Keep a real image visible until a decoded video frame is ready. */
+.film-media .film-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;opacity:1}
+.film-media.has-frame .film-poster{opacity:0}
+.film-media video{position:absolute;inset:0}

@@ -31,3 +31,25 @@
 
 /* Email booking form */
 #booking-form .booking-name{grid-column:1 / 2}#booking-form .booking-email{grid-column:2 / 4}#booking-form .booking-trap{display:none}#booking-form .booking-status{grid-column:1 / -1;margin:0;padding:16px;border:1px solid currentColor;line-height:1.6}#booking-form .booking-status[data-error="true"]{color:#943c2c}#booking-form button:disabled{opacity:.6;cursor:wait}@media(max-width:600px){#booking-form .booking-name,#booking-form .booking-email{grid-column:1 / -1}}
+
+/* Horizontal reviews and mobile alignment */
+#review-list{display:flex;overflow-x:auto;scroll-snap-type:x mandatory;overscroll-behavior-x:contain;padding-bottom:16px;scrollbar-width:thin;scrollbar-color:var(--blue) transparent}
+#review-list .review-card{flex:0 0 calc((100% - 40px)/3);scroll-snap-align:start}
+.review-controls{display:flex;gap:12px}.review-controls button:disabled{opacity:.35;cursor:default}
+.reel-arrows button{width:auto;padding:0 14px;border-radius:3px;font-size:12px}
+.reel-track .film-caption>a{width:auto;padding:6px;border-radius:3px;font-size:10px}
+@media(max-width:1000px){#review-list .review-card{flex-basis:calc((100% - 20px)/2)}}
+@media(max-width:760px){#review-list .review-card{flex-basis:86%}.reels-section .section-heading{align-items:flex-start;text-align:left}.reels-section .section-heading>div{width:100%;min-width:0}.reels-section h2{font-size:clamp(32px,10vw,45px);text-align:left}.reels-intro{max-width:none}.review-controls{width:100%}.review-controls .button{flex:1}}
+/* Centered booking panel */
+html.booking-open{overflow:hidden;scrollbar-gutter:stable}
+.booking-dialog{position:fixed;inset:0;margin:auto;width:min(620px,calc(100% - 32px));max-height:calc(100dvh - 32px);padding:32px;border:0;background:var(--paper);color:var(--ink);overflow-y:auto;overscroll-behavior:contain;box-shadow:0 24px 80px #00172540}
+.booking-dialog::backdrop{background:#092a3db3}
+.booking-dialog:not([open]){display:none}
+.booking-dialog .booking-close{display:block;margin-left:auto;padding:8px 12px;background:transparent;border:1px solid var(--line);color:var(--blue);font:inherit;font-size:13px}
+.booking-dialog h2{font-size:40px;line-height:1.15;margin:18px 0 24px}
+.booking-dialog #booking-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px}
+.booking-dialog #booking-form label{display:flex;flex-direction:column;gap:8px;font-size:14px;min-width:0}
+.booking-dialog #booking-form .booking-name,.booking-dialog #booking-form .booking-email,.booking-dialog #booking-form .service,.booking-dialog #booking-form button,.booking-dialog .form-note{grid-column:1/-1}
+.booking-dialog input,.booking-dialog select{box-sizing:border-box;width:100%;min-width:0;padding:12px;border:1px solid #9daeb4;border-radius:0;background:transparent;color:var(--ink);font:inherit;font-size:16px}
+.booking-dialog .form-note{font-size:12px;line-height:1.6;margin:0}
+@media(max-width:600px){.booking-dialog{padding:20px}.booking-dialog h2{font-size:32px}.booking-dialog #booking-form{gap:14px}}

@@ -6,9 +6,9 @@ Web estática bilingüe. Cinco páginas: inicio, carta visual con filtros y busc
 
 ### Publicar las páginas en Vercel
 
-Importa `Jlproyectia/PatioCordobes` con la rama `main` y Root Directory `./` (la raíz del repositorio, no `patio-web`). El archivo `vercel.json` selecciona el preset Other, omite instalación y compilación, y publica `dist`, donde está `index.html`.
+Importa `Jlproyectia/PatioCordobes` con la rama `main` y Root Directory `./` (la raíz del repositorio, no `patio-web`). El archivo `vercel.json` selecciona el preset Other, instala dependencias con npm ci y omite compilación, y publica `dist`, donde está `index.html`.
 
-Esta configuración publica las páginas y los archivos multimedia. El servidor de reservas actual usa Cloudflare D1 y un Worker; no se ejecuta en Vercel con esta configuración. Para recibir reservas en Vercel hay que adaptar el servidor y conectar una base de datos persistente y las variables privadas de correo.
+La función api/app.js de Vercel recibe las reservas y sirve la carta editable. El estado y las imágenes se guardan en Vercel Blob privado. El servidor antiguo de Cloudflare se conserva como implementación histórica y no recibe solicitudes de producción.
 
 `node scripts/redesign.mjs` genera las páginas HTML desde los datos y textos.
 
@@ -26,7 +26,7 @@ Los estilos y comportamiento activos son `dist/redesign.css` y `dist/redesign.js
 - Galería de inicio móvil con tres categorías, cuatro imágenes por categoría y carrusel manual; cuadrícula completa en escritorio.
 - 32 tarjetas de carta con fotografía; listado completo adicional. Los precios de referencia proceden de la carta publicada en Google en marzo de 2024 y requieren validación. Otros platos muestran «Consultar».
 - 143 reseñas de Google de 4 y 5 estrellas (127 de cinco y 16 de cuatro), comprobadas frente a las 165 valoraciones de la ficha el 5 de noviembre de 2026. Incluye valoraciones sin comentario, extractos de hasta 25 palabras y enlaces a la ficha de Google del restaurante. Algunos textos son traducciones de Google. Datos en `scripts/google-reviews.json`, renderizado en `scripts/reviews.mjs`; filtros y carrusel horizontal en `dist/reviews.js`. No hay sincronización automática con Google Places.
-- Reservas por correo con Resend: nombre, email, fecha, 1–30 personas y comida/cena. Solicitudes a Leviturjeman@gmail.com; enlace privado con aprobación manual y correo de confirmación al cliente.
+- Reservas en Vercel con confirmación manual desde Administración. No hay envío automático de correos; el propietario debe avisar al cliente.
 - Vídeos integrados silenciados, reproducción en vista y botón de pausa. Sin modal, sin vídeo en el hero. Reducción de movimiento respetada.
 - La demo no utiliza analítica ni cookies de seguimiento propias. Guarda solo la preferencia de idioma en localStorage.
 
@@ -37,7 +37,7 @@ Capturas de escritorio y móvil en `qa/`, validación de enlaces locales y refer
 Carrusel actualizado: 20 publicaciones únicas del feed de @patioelcordobes, sin historias ni destacados. Vídeos completos optimizados en H.264, reproducción silenciosa dentro de la página, carga al entrar en pantalla y enlace a cada publicación. Selección trazable en scripts/reel-data.mjs; comprobación con node scripts/verify-reels.mjs.
 
 
-## Reservas por correo
+## Implementación histórica de correo (no activa en Vercel)
 
 `node scripts/serve.mjs` carga `.env` (excluido de Git) y guarda las reservas locales en `.data/bookings.sqlite`. Usa Node 24. En Sites se usa D1 y las variables privadas del entorno. Ver `.env.example` para los nombres de configuración. El remitente debe pertenecer a un dominio verificado en Resend.
 
@@ -48,3 +48,14 @@ Los enlaces de aprobación caducan tras siete días y no confirman por abrirlos:
 Las reservas se abren en un panel modal centrado, con cierre mediante Escape, botón o fondo. Las reseñas se deslizan horizontalmente y conservan los filtros de puntuación.
 
 La sección de cocina usa un recorrido de cuatro especialidades al desplazar la página: foto, categoría y texto sincronizados, con pestañas manuales y navegación de teclado. Con reducción de movimiento se desactiva el recorrido fijo. Comportamiento en `dist/kitchen.js`.
+
+
+## Administración en Vercel
+
+Acceso desde el pie junto a Descubre o /admin.html, solo para el propietario con PIN. Permite crear y editar platos, precios, fotografías, traducciones y disponibilidad; y ver, confirmar, cancelar o modificar fecha, personas y servicio de las nuevas reservas. Los cambios aparecen en la carta sin otro despliegue. No se migran automáticamente reservas del servidor antiguo.
+
+Variables privadas: BLOB_READ_WRITE_TOKEN, ADMIN_PIN_HASH (salt:scrypt hexadecimal de 64 bytes), ADMIN_SESSION_SECRET y APP_ORIGIN. Nunca guardar PIN ni secretos en Git. Para cambiar el PIN, actualizar su hash en Vercel; rotar el secreto de sesión invalida sesiones existentes.
+
+El estado usa escrituras condicionales por ETag. Las reservas requieren sesión HttpOnly de ocho horas. Los cambios requieren origen válido y token CSRF. Los intentos de PIN y solicitudes públicas tienen límites persistentes. Las imágenes de carta son públicas mediante un endpoint limitado a ese tipo de archivo.
+
+Validación: npm ci, npm run test:admin y node scripts/verify.mjs. El servidor estático local no ejecuta la función Vercel. Producción se actualiza mediante push a main.

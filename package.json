@@ -1,0 +1,1 @@
+{"name":"patio-cordobes","private":true,"type":"module","engines":{"node":"24.x"},"scripts":{"test:admin":"node --test tests/admin.test.mjs"},"dependencies":{"@vercel/blob":"2.8.2"},"overrides":{"zod":"4.6.6"}}

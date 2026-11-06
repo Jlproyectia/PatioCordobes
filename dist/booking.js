@@ -83,13 +83,13 @@
     status.hidden=false; status.dataset.error='false';
     status.textContent=en?'Sending your request…':'Enviando tu solicitud…';
     try {
-      const response = await fetch('/api/bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(25000)});
+      const response = await fetch('/api/app?action=bookings',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data),signal:AbortSignal.timeout(25000)});
       const result = await response.json();
       if (!response.ok || !result.ok) {
         if(response.status===429) throw Error(en?'Too many requests. Please try again later.':'Has enviado varias solicitudes. Vuelve a intentarlo más tarde.');
         throw Error(en?'We could not send your request. Your booking is not confirmed. Please try again.':'No hemos podido enviar la solicitud. Tu reserva no está confirmada. Vuelve a intentarlo.');
       }
-      status.textContent=en?'Request sent. Your booking is pending confirmation. We will email you when our team confirms it.':'Solicitud enviada. Tu reserva está pendiente de confirmación. Te avisaremos por correo cuando el equipo la confirme.';
+      status.textContent=en?'Request saved. Your booking is pending confirmation by our team.':'Solicitud guardada. Tu reserva está pendiente de confirmación del equipo.';
       form.reset(); requestId=crypto.randomUUID(); submitted=false;
     } catch (error) {
       status.dataset.error='true';

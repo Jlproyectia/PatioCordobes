@@ -191,3 +191,6 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
  .celebration-photo-pair>figure,.celebration-photo-pair>figure:last-child{height:100%;min-height:0;aspect-ratio:auto}
 }
 .events-page .celebration-photo-pair .mask img{clip-path:none;transform:none;opacity:1}
+.footer-grid{grid-template-columns:1.15fr .9fr 1fr .9fr 1fr}
+@media(max-width:1100px){.footer-grid{grid-template-columns:repeat(3,minmax(0,1fr));gap:32px}}
+@media(max-width:760px){.footer-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.footer-admin{grid-column:auto}.footer-grid a{overflow-wrap:anywhere}}

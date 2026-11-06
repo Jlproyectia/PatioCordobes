@@ -11,3 +11,13 @@ dist/.openai
 dist/.openai/**
 .env
 .env.*
+
+!api
+!api/**
+!server
+!server/admin-*.mjs
+!scripts
+!scripts/menu-images.mjs
+!scripts/menu-data.mjs
+!package.json
+!package-lock.json

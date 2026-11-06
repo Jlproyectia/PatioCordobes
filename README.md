@@ -60,7 +60,7 @@ El estado usa escrituras condicionales por ETag. Las reservas requieren sesión 
 
 Validación: npm ci, npm run test:admin y node scripts/verify.mjs. El servidor estático local no ejecuta la función Vercel. Producción se actualiza mediante push a main.
 
-Reels móviles: `dist/film-player.js` reproduce un único vídeo visible, espera al final del deslizamiento y libera los decodificadores fuera de pantalla. Una portada independiente permanece visible hasta recibir un fotograma y cubre esperas, errores y pausas. Reproducción manual disponible con movimiento reducido. Los veinte vídeos se exportan desde los originales a H.264 720p, YUV420p, 30 fps y fast-start, con caudal limitado a 2,2 Mbps. `node scripts/verify-reels.mjs` comprueba formato, dimensiones, portadas y posición del índice MP4.
+Reels móviles: `dist/film-player.js` reproduce un único vídeo visible, espera al final del deslizamiento y libera los decodificadores fuera de pantalla. Una portada independiente permanece visible hasta recibir un fotograma y cubre esperas, errores y pausas. Los reels arrancan silenciados automáticamente, sin botón de play superpuesto; un control global permite pausar o reanudar. El vídeo activo permanece renderizado bajo la portada para evitar interferir con las políticas de visibilidad de Safari. Se conserva el búfer del reel contiguo al retroceder y se liberan los lejanos. Los originales disponibles se exportan en H.264 hasta 1080p, YUV420p, 30 fps y fast-start; cuatro fuentes limitadas a 720p conservan su resolución. El caudal de las versiones Full HD se limita a 3 Mbps. `node scripts/verify-reels.mjs` comprueba formato, dimensiones, portadas y posición del índice MP4.
 
 ## Editor general del propietario
 

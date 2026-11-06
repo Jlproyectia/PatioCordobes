@@ -204,3 +204,8 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
 .film-media.has-frame video{opacity:1}
 .film-media .film-poster{transform:translateZ(0);backface-visibility:hidden}
 .content-preview [data-content-text]:hover,.content-preview [data-content-image]:hover,.content-preview [data-content-link]:hover{outline:2px solid #205d83;outline-offset:4px;cursor:pointer}
+/* Native inline autoplay: keep the video rendered beneath its independent cover. */
+.film-media video{opacity:1}
+.reel-track .film-pause{display:none!important}
+.reel-auto-pause{border:1px solid #ffffff60;padding:12px 14px;min-height:44px;color:white;background:transparent;font-size:13px;white-space:nowrap}
+.reel-controls{flex-wrap:wrap}

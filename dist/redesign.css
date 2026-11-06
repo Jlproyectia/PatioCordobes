@@ -198,3 +198,8 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
 .film-media .film-poster{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:1;pointer-events:none;opacity:1}
 .film-media.has-frame .film-poster{opacity:0}
 .film-media video{position:absolute;inset:0}
+/* Safari: never expose an unpainted video surface during source changes. */
+.film-media{isolation:isolate}
+.film-media video{opacity:0;z-index:0}
+.film-media.has-frame video{opacity:1}
+.film-media .film-poster{transform:translateZ(0);backface-visibility:hidden}

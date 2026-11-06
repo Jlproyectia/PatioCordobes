@@ -5,6 +5,41 @@
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
   const pausedByUser = new WeakSet();
   let active = null, timer, frame;
+  const states = new WeakMap(videos.map(v => [v, {generation: 0, watchdog: null, frameId: null, retries: 0}]));
+  function cancel(v) {
+    const state = states.get(v);
+    state.generation++;
+    clearTimeout(state.watchdog);
+    if (state.frameId !== null && v.cancelVideoFrameCallback) v.cancelVideoFrameCallback(state.frameId);
+    state.frameId = null;
+  }
+  function ready(v) {
+    const state = states.get(v), generation = state.generation;
+    if (active !== v || v.paused) return;
+    if (v.requestVideoFrameCallback) {
+      if (state.frameId !== null) return;
+      state.frameId = v.requestVideoFrameCallback(() => {
+        state.frameId = null;
+        if (state.generation !== generation || active !== v || v.paused || v.seeking || v.readyState < 2) return;
+        media(v).classList.add('has-frame');
+        state.retries = 0;
+        clearTimeout(state.watchdog);
+        state.watchdog = setTimeout(() => recover(v), 5000);
+        ready(v);
+      });
+    }
+  }
+  function recover(v) {
+    if (active !== v || document.hidden || pausedByUser.has(v)) return;
+    const state = states.get(v);
+    cover(v);
+    if (state.retries >= 2) { cancel(v); v.pause(); button(v); return; }
+    state.retries++;
+    cancel(v);
+    v.pause();
+    v.load();
+    play(v);
+  }
   const media = v => v.closest('.film-media');
   const cover = v => media(v).classList.remove('has-frame');
   function button(v) {
@@ -14,6 +49,7 @@
     btn.setAttribute('aria-label', document.documentElement.lang === 'en' ? (v.paused ? 'Play video' : 'Pause video') : (v.paused ? 'Reproducir vídeo' : 'Pausar vídeo'));
   }
   function release(v) {
+    cancel(v);
     cover(v);
     v.pause();
     const source = v.querySelector('source');
@@ -26,6 +62,7 @@
     if (active !== v) {
       videos.forEach(other => { if (other !== v) release(other); });
       active = v;
+      states.get(v).retries = 0;
     }
     const source = v.querySelector('source');
     v.muted = true;
@@ -34,7 +71,14 @@
       source.src = source.dataset.src;
       v.load();
     } else if (v.error) v.load();
-    v.play().catch(() => { cover(v); button(v); });
+    const state = states.get(v), generation = state.generation;
+    clearTimeout(state.watchdog);
+    state.watchdog = setTimeout(() => recover(v), 7000);
+    v.play().then(() => { if (state.generation === generation) ready(v); }).catch(() => {
+      if (state.generation !== generation) return;
+      cover(v); button(v);
+      clearTimeout(state.watchdog);
+    });
   }
   function visibleArea(v) {
     const r = v.getBoundingClientRect();
@@ -63,21 +107,35 @@
   }
   videos.forEach(v => {
     button(v);
-    const reveal = () => { if (active === v && !v.paused && !v.seeking && v.readyState >= 2) media(v).classList.add('has-frame'); };
-    v.addEventListener('playing', () => {
-      if ('requestVideoFrameCallback' in v) v.requestVideoFrameCallback(reveal);
-      else requestAnimationFrame(reveal);
-      button(v);
+    let previousTime = 0;
+    v.addEventListener('playing', () => { ready(v); button(v); });
+    for (const event of ['waiting', 'stalled', 'seeking', 'emptied', 'error']) v.addEventListener(event, () => {
+      cover(v);
+      const state = states.get(v);
+      if (active === v && !pausedByUser.has(v)) {
+        clearTimeout(state.watchdog);
+        state.watchdog = setTimeout(() => recover(v), 5000);
+      }
     });
-    for (const event of ['waiting', 'stalled', 'seeking', 'emptied', 'error']) v.addEventListener(event, () => cover(v));
-    v.addEventListener('timeupdate', reveal);
+    v.addEventListener('timeupdate', () => {
+      // Older Safari: require actual playback progress, not just readyState.
+      if (!v.requestVideoFrameCallback && active === v && !v.paused && !v.seeking && v.readyState >= 3 && v.currentTime !== previousTime) {
+        media(v).classList.add('has-frame');
+        const state = states.get(v);
+        state.retries = 0;
+        clearTimeout(state.watchdog);
+        state.watchdog = setTimeout(() => recover(v), 5000);
+      }
+      previousTime = v.currentTime;
+    });
     v.addEventListener('pause', () => { cover(v); button(v); });
     media(v).querySelector('.film-pause').addEventListener('click', () => {
-      if (v.paused) { pausedByUser.delete(v); play(v); }
+      if (v.paused) { pausedByUser.delete(v); states.get(v).retries = 0; play(v); }
       else { pausedByUser.add(v); v.pause(); }
     });
   });
   document.querySelectorAll('.reel-track').forEach(track => {
+    track.addEventListener('reelchange', () => { if (active) { release(active); active = null; } });
     track.addEventListener('scroll', scrolling, {passive: true});
     track.addEventListener('scrollend', settle);
   });
@@ -87,5 +145,7 @@
   addEventListener('pageshow', settle);
   document.addEventListener('visibilitychange', settle);
   reduced.addEventListener('change', () => { if (reduced.matches) { videos.forEach(release); active = null; } else settle(); });
+  // Load real covers up front, including slides approached by rapid swipes.
+  document.querySelectorAll('.film-poster').forEach(img => { img.loading = 'eager'; });
   settle();
 })();

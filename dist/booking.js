@@ -27,11 +27,53 @@
   form.elements.date.min = dateParts;
   const max = new Date(Date.now()+365*86400000);
   form.elements.date.max = max.toISOString().slice(0,10);
+  const dateInput=form.elements.date;
+  const isAvailable=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&value>=dateInput.min&&value<=dateInput.max&&[0,4,5,6].includes(new Date(value+'T12:00:00Z').getUTCDay());
+  const language=()=>document.documentElement.lang==='en'?'en':'es';
+  dateInput.type='hidden';
+  const dateLabel=dateInput.parentElement.querySelector('span');dateLabel.id='booking-date-label';
+  const dateButton=document.createElement('button');dateButton.type='button';dateButton.className='booking-date-button';dateButton.id='booking-date-button';dateButton.setAttribute('aria-labelledby','booking-date-label booking-date-button');dateButton.setAttribute('aria-expanded','false');dateButton.setAttribute('aria-controls','booking-calendar');dateInput.after(dateButton);
+  const calendar=document.createElement('div');calendar.id='booking-calendar';calendar.className='booking-calendar';calendar.hidden=true;calendar.setAttribute('role','group');calendar.setAttribute('aria-labelledby','calendar-month');
+  form.querySelector('.service').before(calendar);
+  const hint=document.createElement('p');hint.className='calendar-hint';hint.id='booking-date-hint';hint.dataset.es='Lunes, martes y miércoles: cerrado.';hint.dataset.en='Closed Monday, Tuesday and Wednesday.';hint.textContent=hint.dataset[language()];calendar.after(hint);dateButton.setAttribute('aria-describedby',hint.id);
+  let month=new Date(dateInput.min+'T12:00:00Z');month.setUTCDate(1);
+  const iso=d=>d.toISOString().slice(0,10);
+  const updateDateLabel=()=>{dateButton.textContent=dateInput.value?new Intl.DateTimeFormat(language(),{day:'2-digit',month:'2-digit',year:'numeric',timeZone:'UTC'}).format(new Date(dateInput.value+'T12:00:00Z')):(language()==='en'?'Choose date':'Elegir fecha')};
+  function closeCalendar(){calendar.hidden=true;dateButton.setAttribute('aria-expanded','false')}
+  function renderCalendar(){
+    const en=language()==='en',year=month.getUTCFullYear(),m=month.getUTCMonth();
+    calendar.replaceChildren();
+    const head=document.createElement('div');head.className='calendar-head';
+    const title=document.createElement('strong');title.id='calendar-month';title.setAttribute('aria-live','polite');title.textContent=new Intl.DateTimeFormat(language(),{month:'long',year:'numeric',timeZone:'UTC'}).format(month);
+    function nav(offset,label){const b=document.createElement('button');b.type='button';b.textContent=label;const target=new Date(Date.UTC(year,m+offset,1,12));b.disabled=offset<0?iso(new Date(Date.UTC(year,m,0,12)))<dateInput.min:iso(target)>dateInput.max;b.addEventListener('click',()=>{month=target;renderCalendar();calendar.querySelector(offset<0?'.calendar-head button:first-child':'.calendar-head button:last-child').focus()});return b}
+    head.append(nav(-1,en?'Previous':'Anterior'),title,nav(1,en?'Next':'Siguiente'));calendar.append(head);
+    const grid=document.createElement('div');grid.className='calendar-days';
+    (en?['Mon','Tue','Wed','Thu','Fri','Sat','Sun']:['L','M','X','J','V','S','D']).forEach(day=>{const cell=document.createElement('span');cell.textContent=day;cell.className='calendar-weekday';grid.append(cell)});
+    const offset=(month.getUTCDay()+6)%7;
+    for(let i=0;i<offset;i++){const empty=document.createElement('span');empty.setAttribute('aria-hidden','true');grid.append(empty)}
+    const total=new Date(Date.UTC(year,m+1,0)).getUTCDate();
+    for(let day=1;day<=total;day++){
+      const d=new Date(Date.UTC(year,m,day,12)),value=iso(d),button=document.createElement('button');button.type='button';button.textContent=String(day);button.dataset.date=value;button.disabled=!isAvailable(value);button.setAttribute('aria-pressed',String(dateInput.value===value));
+      const label=new Intl.DateTimeFormat(language(),{dateStyle:'full',timeZone:'UTC'}).format(d);button.setAttribute('aria-label',label+([1,2,3].includes(d.getUTCDay())?(en?' — closed':' — cerrado'):''));
+      if(value===dateParts)button.setAttribute('aria-current','date');
+      button.addEventListener('click',()=>{if(!isAvailable(value))return;dateInput.value=value;dateInput.dispatchEvent(new Event('input',{bubbles:true}));updateDateLabel();closeCalendar();dateButton.focus()});grid.append(button);
+    }
+    calendar.append(grid);
+  }
+  dateButton.addEventListener('click',()=>{if(!calendar.hidden){closeCalendar();return}if(dateInput.value)month=new Date(dateInput.value.slice(0,7)+'-01T12:00:00Z');renderCalendar();calendar.hidden=false;dateButton.setAttribute('aria-expanded','true');calendar.querySelector('.calendar-days button:not(:disabled)')?.focus()});
+  calendar.addEventListener('keydown',event=>{if(event.key==='Escape'){event.preventDefault();event.stopPropagation();closeCalendar();dateButton.focus()}});
+  form.addEventListener('reset',()=>{setTimeout(updateDateLabel,0);closeCalendar()});dialog.addEventListener('close',closeCalendar);
+  new MutationObserver(()=>{updateDateLabel();if(!calendar.hidden)renderCalendar()}).observe(document.documentElement,{attributes:true,attributeFilter:['lang']});updateDateLabel();
+
   let requestId = crypto.randomUUID(), submitted = false, busy = false;
   form.addEventListener('input', () => { if (submitted) { requestId=crypto.randomUUID(); submitted=false; } });
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    if (busy || !form.reportValidity()) return;
+    if (busy) return;
+    if (!isAvailable(dateInput.value)) {
+      const status=form.querySelector('.booking-status');status.hidden=false;status.dataset.error='true';status.textContent=language()==='en'?'Choose an available date, Thursday to Sunday.':'Elige una fecha disponible, de jueves a domingo.';dateButton.focus();if(calendar.hidden)dateButton.click();return;
+    }
+    if (!form.reportValidity()) return;
     const en = document.documentElement.lang === 'en';
     const status = form.querySelector('.booking-status'), button = form.querySelector('[type="submit"]');
     const label = button.querySelector('[data-es]');

@@ -38,6 +38,7 @@ export async function handleBookings(request, env) {
           typeof date !== 'string' || !/^\d{4}-\d{2}-\d{2}$/.test(date) || !Number.isFinite(+dateValue) || dateValue.toISOString().slice(0,10) !== date || date < today() || +dateValue > Date.now()+366*86400000 ||
           !Number.isInteger(guests) || guests < 1 || guests > 30 || !['comida','cena'].includes(service) ||
           typeof requestId !== 'string' || !/^[a-f0-9-]{36}$/.test(requestId)) return json({error:'invalid_fields'},400);
+      if ([1,2,3].includes(dateValue.getUTCDay())) return json({error:'closed_day'},400);
       const now = Date.now();
       let booking = await env.DB.prepare('SELECT * FROM bookings WHERE id = ?').bind(requestId).first();
       if (booking && (booking.email !== email.trim().toLowerCase() || booking.name !== name.trim() || booking.date !== date || booking.guests !== guests || booking.service !== service)) return json({error:'request_conflict'},409);

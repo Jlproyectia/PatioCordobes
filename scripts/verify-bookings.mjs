@@ -5,12 +5,14 @@ const DB = openDatabase(':memory:');
 const sent=[];
 let fail=false;
 const env={DB,RESEND_API_KEY:'test-secret',RESEND_FROM:'test@example.com',BOOKING_OWNER_EMAIL:'owner@example.com',BOOKING_BASE_URL:'https://patio.example',fetch:async(url,options)=>{if(fail)return new Response('{}',{status:503});sent.push(JSON.parse(options.body));return Response.json({id:'test'});}};
-const data={name:'Prueba <segura>',email:'customer@example.com',date:new Date(Date.now()+86400000).toISOString().slice(0,10),guests:4,service:'cena',language:'es',requestId:crypto.randomUUID()};
+const available=new Date(Date.now()+86400000);while([1,2,3].includes(available.getUTCDay()))available.setUTCDate(available.getUTCDate()+1);
+const data={name:'Prueba <segura>',email:'customer@example.com',date:available.toISOString().slice(0,10),guests:4,service:'cena',language:'es',requestId:crypto.randomUUID()};
 const submit=(value,origin=env.BOOKING_BASE_URL)=>handleBookings(new Request(env.BOOKING_BASE_URL+'/api/bookings',{method:'POST',headers:{origin,'Content-Type':'application/json'},body:JSON.stringify(value)}),env);
 assert.equal((await submit({...data,guests:0})).status,400);
 assert.equal((await submit({...data,date:'2026-02-31'})).status,400);
 assert.equal((await submit(data,'https://attacker.example')).status,403);
 assert.equal((await submit({...data,website:'bot'})).status,400);
+for(const weekday of [1,2,3]){const closed=new Date(available);while(closed.getUTCDay()!==weekday)closed.setUTCDate(closed.getUTCDate()+1);assert.equal((await submit({...data,date:closed.toISOString().slice(0,10)})).status,400)}
 assert.equal((await submit(data)).status,200);
 assert.equal(sent.length,1);
 assert.match(sent[0].html,/Prueba &lt;segura&gt;/);

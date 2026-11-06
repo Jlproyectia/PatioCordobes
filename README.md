@@ -61,3 +61,11 @@ El estado usa escrituras condicionales por ETag. Las reservas requieren sesión 
 Validación: npm ci, npm run test:admin y node scripts/verify.mjs. El servidor estático local no ejecuta la función Vercel. Producción se actualiza mediante push a main.
 
 Reels móviles: `dist/film-player.js` reproduce un único vídeo visible, espera al final del deslizamiento y libera los decodificadores fuera de pantalla. Una portada independiente permanece visible hasta recibir un fotograma y cubre esperas, errores y pausas. Reproducción manual disponible con movimiento reducido. Los veinte vídeos se exportan desde los originales a H.264 720p, YUV420p, 30 fps y fast-start, con caudal limitado a 2,2 Mbps. `node scripts/verify-reels.mjs` comprueba formato, dimensiones, portadas y posición del índice MP4.
+
+## Editor general del propietario
+
+Administración incluye Carta, Reservas, Toda la web, Categorías y Horarios y calendario. El propietario puede editar el contenido existente de Inicio, Carta, Celebraciones, Galería e Información, además de cabecera, pie, logotipo, fotografías, enlaces y los textos dinámicos de cocina. Los vídeos admiten enlaces HTTPS directos a MP4; sus portadas se cambian como imágenes. El editor ofrece búsqueda por página y sección, vista previa con selección al pulsar y restauración del contenido original. No permite introducir código HTML ejecutable.
+
+`node scripts/redesign.mjs` genera las páginas y ejecuta `scripts/cms-build.mjs`: añade identificadores de contenido y actualiza `server/site-manifest.json`. No ejecutar el anotador directamente sobre HTML ya anotado. Los valores personalizados y sus versiones se conservan en el almacén privado, separados del HTML base. Los textos comunes de cabecera/pie y el logotipo comparten cambios entre páginas.
+
+Los nombres de categorías cambian sin mover los platos. El horario semanal, los servicios y cierres excepcionales se aplican tanto a la web como a la validación de reservas en el servidor. Modificar horarios no cancela reservas existentes ni envía notificaciones. Las escrituras de contenido, categorías y horarios requieren sesión, origen autorizado, CSRF y versión vigente. `npm run test:admin` incluye pruebas de contenido, restauración, categorías, calendario y protección de enlaces e imágenes.

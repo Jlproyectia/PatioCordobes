@@ -5,9 +5,9 @@
   dialog.className = 'booking-dialog';
   dialog.setAttribute('aria-labelledby','booking-title');
   const en = document.documentElement.lang === 'en';
-  dialog.innerHTML = '<button type="button" class="booking-close" data-es="Cerrar" data-en="Close">'+(en?'Close':'Cerrar')+'</button><h2 id="booking-title" data-es="Reserva tu mesa" data-en="Book your table">'+(en?'Book your table':'Reserva tu mesa')+'</h2>';
+  dialog.innerHTML = '<button type="button" class="booking-close" data-es="Cerrar" data-en="Close">'+(en?'Close':'Cerrar')+'</button><h2 data-content-text="booking-title" id="booking-title" data-es="Reserva tu mesa" data-en="Book your table">'+(en?'Book your table':'Reserva tu mesa')+'</h2>';
   const launch = document.createElement('button');
-  launch.type='button';launch.className='button';launch.dataset.es='Solicitar reserva';launch.dataset.en='Request a booking';launch.textContent=en?launch.dataset.en:launch.dataset.es;
+  launch.dataset.contentText='booking-launch';launch.type='button';launch.className='button';launch.dataset.es='Solicitar reserva';launch.dataset.en='Request a booking';launch.textContent=en?launch.dataset.en:launch.dataset.es;
   form.replaceWith(launch);dialog.append(form);document.body.append(dialog);
   let opener;
   function openBooking(trigger){
@@ -18,7 +18,7 @@
     dialog.showModal();document.documentElement.classList.add('booking-open');
   }
   launch.addEventListener('click',()=>openBooking(launch));
-  document.querySelectorAll('a[href$="#reservar"]').forEach(link=>link.addEventListener('click',event=>{event.preventDefault();openBooking(link)}));
+  document.querySelectorAll('a[href$="#reservar"]').forEach(link=>link.addEventListener('click',event=>{if(link.getAttribute('href').endsWith('#reservar')){event.preventDefault();openBooking(link)}}));
   dialog.querySelector('.booking-close').addEventListener('click',()=>dialog.close());
   dialog.addEventListener('click',event=>{if(event.target!==dialog)return;const r=dialog.getBoundingClientRect();if(event.clientX<r.left||event.clientX>r.right||event.clientY<r.top||event.clientY>r.bottom)dialog.close()});
   dialog.addEventListener('close',()=>{document.documentElement.classList.remove('booking-open');opener?.focus({preventScroll:true})});
@@ -28,7 +28,9 @@
   const max = new Date(Date.now()+365*86400000);
   form.elements.date.max = max.toISOString().slice(0,10);
   const dateInput=form.elements.date;
-  const isAvailable=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&value>=dateInput.min&&value<=dateInput.max&&[0,4,5,6].includes(new Date(value+'T12:00:00Z').getUTCDay());
+  let schedule=null;
+  const dayOf=value=>new Date(value+'T12:00:00Z').getUTCDay();
+  const isAvailable=value=>/^\d{4}-\d{2}-\d{2}$/.test(value)&&value>=dateInput.min&&value<=dateInput.max&&(schedule?!schedule.days.find(d=>d.day===dayOf(value))?.closed&&!schedule.closedDates.includes(value):[0,4,5,6].includes(dayOf(value)));
   const language=()=>document.documentElement.lang==='en'?'en':'es';
   dateInput.type='hidden';
   const dateLabel=dateInput.parentElement.querySelector('span');dateLabel.id='booking-date-label';
@@ -54,7 +56,7 @@
     const total=new Date(Date.UTC(year,m+1,0)).getUTCDate();
     for(let day=1;day<=total;day++){
       const d=new Date(Date.UTC(year,m,day,12)),value=iso(d),button=document.createElement('button');button.type='button';button.textContent=String(day);button.dataset.date=value;button.disabled=!isAvailable(value);button.setAttribute('aria-pressed',String(dateInput.value===value));
-      const label=new Intl.DateTimeFormat(language(),{dateStyle:'full',timeZone:'UTC'}).format(d);button.setAttribute('aria-label',label+([1,2,3].includes(d.getUTCDay())?(en?' — closed':' — cerrado'):''));
+      const label=new Intl.DateTimeFormat(language(),{dateStyle:'full',timeZone:'UTC'}).format(d);button.setAttribute('aria-label',label+(!isAvailable(value)?(en?' — closed':' — cerrado'):''));
       if(value===dateParts)button.setAttribute('aria-current','date');
       button.addEventListener('click',()=>{if(!isAvailable(value))return;dateInput.value=value;dateInput.dispatchEvent(new Event('input',{bubbles:true}));updateDateLabel();closeCalendar();dateButton.focus()});grid.append(button);
     }
@@ -96,4 +98,8 @@
       status.textContent=error.name==='TimeoutError' || error instanceof TypeError ? (en?'We could not check the delivery. Please retry; your request will not be duplicated.':'No hemos podido comprobar el envío. Vuelve a intentarlo; tu solicitud no se duplicará.') : error.message;
     } finally { busy=false; button.disabled=false; form.removeAttribute('aria-busy'); status.focus(); }
   });
+
+  function updateSchedule(site){if(!site?.schedule)return;schedule=site.schedule;hint.dataset.es='Selecciona uno de los días disponibles en el calendario.';hint.dataset.en='Choose an available day in the calendar.';hint.textContent=hint.dataset[language()];if(dateInput.value&&!isAvailable(dateInput.value))dateInput.value='';updateDateLabel();renderCalendar();updateServices();}
+  function updateServices(){const slots=dateInput.value&&schedule?schedule.days.find(d=>d.day===dayOf(dateInput.value)).slots:null;for(const option of form.elements.service.options)option.disabled=slots?!slots.some(s=>s.service===option.value):false;if(form.elements.service.selectedOptions[0]?.disabled)form.elements.service.value=[...form.elements.service.options].find(o=>!o.disabled)?.value||'';}
+  dateInput.addEventListener('input',updateServices);window.addEventListener('sitecontent',e=>updateSchedule(e.detail));window.patioSiteReady?.then(updateSchedule);
 })();

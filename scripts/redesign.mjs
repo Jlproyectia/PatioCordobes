@@ -41,3 +41,5 @@ console.log('Five redesigned pages built.');
 
 
 
+
+await import('./cms-build.mjs');

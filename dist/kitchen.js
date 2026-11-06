@@ -9,6 +9,7 @@
   ['provolone-horno','Lo bueno se comparte.','Good food is for sharing.','Algo al centro, un poco para cada uno. Quesos, ensaladillas y el sabor de nuestra cocina de siempre.','Something for the table and a little for everyone. Cheese, salads and the flavours of home cooking.'],
   ['tarta-queso-nueva','Un final para quedarse.','A sweet reason to stay.','Nuestra tarta de queso al horno de leña. El comienzo de una buena sobremesa.','Our wood-fired cheesecake. The start of a lovely after-lunch conversation.']
  ];
+ function content(site){for(let i=0;i<dishes.length;i++){for(const [suffix,es,en] of [['title',1,2],['description',3,4]]){const entry=site.content?.['kitchen-'+i+'-'+suffix];if(entry&&!entry.reset){dishes[i][es]=entry.value;dishes[i][en]=entry.en||entry.value;}}const image=site.content?.['kitchen-'+i+'-image'];if(image&&!image.reset)cards[i].src=image.value;}const index=Math.max(0,active);active=-1;activate(index);}
  const stack=photo.parentElement;
  const cards=dishes.map((d,i)=>{
   const card=i===0?photo:new Image();card.src=`assets/images/${d[0]}.webp`;
@@ -17,7 +18,7 @@
  });
  stack.classList.add('kitchen-card-stack');
  let active=-1,scheduled=false;
- function text(el,es,en){el.dataset.es=es;el.dataset.en=en;el.textContent=document.documentElement.lang==='en'?en:es}
+ function text(el,es,en){const safe=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));el.dataset.es=safe(es);el.dataset.en=safe(en);el.textContent=document.documentElement.lang==='en'?en:es}
  function activate(index){
   if(index===active)return;active=index;const d=dishes[index];
   tabs.forEach((b,i)=>{b.setAttribute('aria-selected',String(i===index));b.tabIndex=i===index?0:-1});
@@ -44,5 +45,5 @@
  }
  tabs.forEach((b,i)=>{b.addEventListener('click',()=>select(i));b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?3:(i+(['ArrowRight','ArrowDown'].includes(e.key)?1:3))%4;tabs[n].focus({preventScroll:true});select(n)})});
  function setup(){section.classList.toggle('kitchen-scroll',!reduced.matches);draw(active<0?0:active);update()}
- addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});addEventListener('resize',update);reduced.addEventListener('change',setup);setup();
+ addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});addEventListener('resize',update);reduced.addEventListener('change',setup);setup();window.addEventListener('sitecontent',e=>content(e.detail));if(window.patioSite)content(window.patioSite);
 })();

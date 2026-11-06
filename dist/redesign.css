@@ -203,3 +203,4 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
 .film-media video{opacity:0;z-index:0}
 .film-media.has-frame video{opacity:1}
 .film-media .film-poster{transform:translateZ(0);backface-visibility:hidden}
+.content-preview [data-content-text]:hover,.content-preview [data-content-image]:hover,.content-preview [data-content-link]:hover{outline:2px solid #205d83;outline-offset:4px;cursor:pointer}

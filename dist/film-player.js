@@ -39,6 +39,7 @@
     v.load();
     play(v);
   }
+  const videoURL = source => source.dataset.src.startsWith('assets/videos/') ? source.dataset.src+'?v=fullhd-1' : source.dataset.src;
   const media = v => v.closest('.film-media');
   const cover = v => media(v).classList.remove('has-frame');
   function button(v) {
@@ -70,7 +71,7 @@
         if(!source.hasAttribute('src')){
           following.autoplay=false;
           following.preload='metadata';
-          source.src=source.dataset.src;
+          source.src=videoURL(source);
           following.load();
         }
       }
@@ -82,7 +83,7 @@
     v.playsInline = true;
     v.preload = 'auto';
     if (!source.hasAttribute('src')) {
-      source.src = source.dataset.src;
+      source.src = videoURL(source);
       v.load();
     } else if (v.error) v.load();
     const state = states.get(v), generation = state.generation;

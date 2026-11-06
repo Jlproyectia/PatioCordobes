@@ -107,3 +107,7 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
 @media(max-width:760px) and (max-height:650px){.kitchen-stage{padding-top:12px;padding-bottom:12px;gap:8px}.kitchen-stage .eyebrow{display:none}.kitchen-stage h2{font-size:25px}.kitchen .dish-showcase{gap:10px}.kitchen .dish-showcase-copy{gap:6px}.kitchen .speciality-title{font-size:24px}.kitchen #speciality-copy{font-size:12px}}
 .kitchen .dish-showcase-copy{color:#102958}
 @media(max-width:360px){.kitchen #speciality-copy{min-height:53px}}
+/* Four persistent photo cards: the front card drops to reveal the next. */
+.kitchen .kitchen-card-stack{isolation:isolate;overflow:hidden;background:transparent}
+.kitchen .kitchen-card-stack .kitchen-card{position:absolute;top:0;left:0;width:100%;height:calc(100% - 24px);object-fit:cover;transform-origin:50% 0%;opacity:1;transition:none;will-change:transform;border:1px solid #faf5ed;box-shadow:0 -4px 18px #10295820;border-radius:5px}
+@media(prefers-reduced-motion:reduce){.kitchen .kitchen-card-stack .kitchen-card{will-change:auto}}

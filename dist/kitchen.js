@@ -9,25 +9,40 @@
   ['provolone-horno','Lo bueno se comparte.','Good food is for sharing.','Algo al centro, un poco para cada uno. Quesos, ensaladillas y el sabor de nuestra cocina de siempre.','Something for the table and a little for everyone. Cheese, salads and the flavours of home cooking.'],
   ['tarta-queso-nueva','Un final para quedarse.','A sweet reason to stay.','Nuestra tarta de queso al horno de leña. El comienzo de una buena sobremesa.','Our wood-fired cheesecake. The start of a lovely after-lunch conversation.']
  ];
- const images=dishes.map(d=>{const i=new Image();i.src=`assets/images/${d[0]}.webp`;return i});
- let active=-1,version=0,scheduled=false;
+ const stack=photo.parentElement;
+ const cards=dishes.map((d,i)=>{
+  const card=i===0?photo:new Image();card.src=`assets/images/${d[0]}.webp`;
+  card.alt=tabs[i].textContent;card.classList.add('kitchen-card');card.style.zIndex=String(4-i);
+  card.loading='eager';card.decoding='async';if(i)stack.append(card);return card;
+ });
+ stack.classList.add('kitchen-card-stack');
+ let active=-1,scheduled=false;
  function text(el,es,en){el.dataset.es=es;el.dataset.en=en;el.textContent=document.documentElement.lang==='en'?en:es}
- async function activate(index){
-  if(index===active)return;active=index;const request=++version,d=dishes[index];
+ function activate(index){
+  if(index===active)return;active=index;const d=dishes[index];
   tabs.forEach((b,i)=>{b.setAttribute('aria-selected',String(i===index));b.tabIndex=i===index?0:-1});
   panel.setAttribute('aria-labelledby',tabs[index].id);
   text(title,d[1],d[2]);text(copy,d[3],d[4]);section.querySelector('.image-index').textContent=`0${index+1} / 04`;
-  try{await images[index].decode()}catch{}
-  if(request!==version)return;photo.getAnimations().forEach(a=>a.cancel());photo.src=images[index].src;photo.alt=tabs[index].textContent;
-  if(!reduced.matches)photo.animate([{opacity:.45,transform:'translateY(12px) scale(1.015)'},{opacity:1,transform:'translateY(0) scale(1)'}],{duration:450,easing:'cubic-bezier(.2,.7,.2,1)'});
+
  }
  function range(){return Math.max(1,section.offsetHeight-stage.offsetHeight)}
- function update(){scheduled=false;if(reduced.matches)return;const progress=Math.max(0,Math.min(1,-section.getBoundingClientRect().top/range()));activate(Math.min(3,Math.floor(progress*4)))}
+ function draw(position){
+  const height=stack.clientHeight,front=Math.floor(position),fraction=position-front;
+  cards.forEach((card,i)=>{
+   const passed=i<front,fall=i===front?fraction:0,depth=Math.max(0,i-position);
+   const y=passed?height+48:24-Math.min(depth,3)*8+fall*(height+48);
+   const scale=1-Math.min(depth,3)*.035;
+   card.style.transform=`translate3d(0,${y}px,0) scale(${scale})`;
+   card.setAttribute('aria-hidden',String(i!==Math.min(3,Math.floor(position+.5))));
+  });
+  activate(Math.min(3,Math.floor(position+.5)));
+ }
+ function update(){scheduled=false;if(reduced.matches)return;const progress=Math.max(0,Math.min(1,-section.getBoundingClientRect().top/range()));draw(Math.max(0,Math.min(3,progress*3.6-.3)))}
  function select(index){
-  activate(index);
-  if(!reduced.matches){const top=scrollY+section.getBoundingClientRect().top;scrollTo({top:top+range()*((index+.5)/4),behavior:'instant'})}
+  draw(index);
+  if(!reduced.matches){const top=scrollY+section.getBoundingClientRect().top;scrollTo({top:top+range()*((index+.3)/3.6),behavior:'instant'})}
  }
  tabs.forEach((b,i)=>{b.addEventListener('click',()=>select(i));b.addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','ArrowUp','ArrowDown','Home','End'].includes(e.key))return;e.preventDefault();const n=e.key==='Home'?0:e.key==='End'?3:(i+(['ArrowRight','ArrowDown'].includes(e.key)?1:3))%4;tabs[n].focus({preventScroll:true});select(n)})});
- function setup(){section.classList.toggle('kitchen-scroll',!reduced.matches);activate(active<0?0:active);update()}
+ function setup(){section.classList.toggle('kitchen-scroll',!reduced.matches);draw(active<0?0:active);update()}
  addEventListener('scroll',()=>{if(!scheduled){scheduled=true;requestAnimationFrame(update)}},{passive:true});addEventListener('resize',update);reduced.addEventListener('change',setup);setup();
 })();

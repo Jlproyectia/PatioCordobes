@@ -12,6 +12,7 @@ function rate(state,key,limit,period){const now=Date.now();for(const [k,v] of Ob
 function audit(state,action,id){state.audit.push({at:new Date().toISOString(),action,id});state.audit=state.audit.slice(-500);}
 export function createAdminService({store,env,uploadImage,fetchImage}){
  const secret=env.ADMIN_SESSION_SECRET?.trim(),pinHash=env.ADMIN_PIN_HASH?.trim(),origin=env.APP_ORIGIN?.trim();
+ const allowedOrigins=new Set([origin,...(env.APP_ALLOWED_ORIGINS||'').split(',').map(value=>value.trim()),...[env.VERCEL_URL,env.VERCEL_BRANCH_URL,env.VERCEL_PROJECT_PRODUCTION_URL].filter(Boolean).map(host=>'https://'+host.trim())].filter(Boolean));
  const json=(data,status=200,headers={})=>Response.json(data,{status,headers:{'Cache-Control':'no-store','X-Content-Type-Options':'nosniff',...headers}});
  const cookie=(value,age)=>`patio_admin=${value}; Path=/; HttpOnly; SameSite=Strict; Max-Age=${age}${origin?.startsWith('https:')?'; Secure':''}`;
  function session(request){const value=request.headers.get('cookie')?.match(/(?:^|;\s*)patio_admin=([^;]+)/)?.[1];if(!value)return null;const [payload,signature]=value.split('.');if(!payload||!signature||!equal(hash(secret,payload),signature))return null;try{const data=JSON.parse(Buffer.from(payload,'base64url').toString());return data.exp>Date.now()&&typeof data.csrf==='string'?data:null}catch{return null}}
@@ -20,7 +21,7 @@ export function createAdminService({store,env,uploadImage,fetchImage}){
   if(!secret||!pinHash||!origin)fail(503,'Administración pendiente de configuración.');
   const url=new URL(request.url),action=url.searchParams.get('action')||'',method=request.method;
   if(!['GET','POST','PUT'].includes(method))fail(405,'Método no permitido.');
-  if(method!=='GET'&&request.headers.get('origin')!==origin)fail(403,'Origen no permitido.');
+  if(method!=='GET'&&!allowedOrigins.has(request.headers.get('origin')))fail(403,'Origen no permitido.');
   const ip=hash(secret,request.headers.get('x-real-ip')||'unknown');
   if(action==='menu'&&method==='GET'){const state=await store.read();return json({categories,products:state.products.filter(p=>p.active)});}
   if(action==='media'&&method==='GET'){const result=await fetchImage(url.searchParams.get('id')||'');if(!result)fail(404,'Imagen no encontrada.');return new Response(result.stream,{headers:{'Content-Type':result.blob.contentType,'Cache-Control':'public, max-age=31536000, immutable','X-Content-Type-Options':'nosniff'}});}

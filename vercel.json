@@ -27,5 +27,8 @@
         }
       ]
     }
-  ]
+  ],
+  "env": {
+    "APP_ALLOWED_ORIGINS": "https://patiocordobes-jlstudio1.vercel.app,https://patiocordobes-git-main-jlstudio1.vercel.app"
+  }
 }

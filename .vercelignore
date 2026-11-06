@@ -1,0 +1,13 @@
+# Deploy only public static assets and Vercel configuration.
+*
+!dist
+!dist/**
+!vercel.json
+dist/client
+dist/client/**
+dist/server
+dist/server/**
+dist/.openai
+dist/.openai/**
+.env
+.env.*

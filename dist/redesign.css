@@ -68,3 +68,42 @@ html.booking-open{overflow:hidden;scrollbar-gutter:stable}
   .reserve-content>h2{font-size:clamp(40px,11vw,52px);line-height:1.08;margin-bottom:32px}
   .reserve-content>.button{min-height:48px;padding:14px 22px}
 }
+/* Scroll-driven kitchen: one photograph and one story at a time. */
+.kitchen{background:#faf5ed;color:#102958;padding:0;position:relative}
+.kitchen-stage{padding:32px var(--edge);display:grid;grid-template-rows:auto auto minmax(0,1fr);gap:24px;min-height:720px}
+.kitchen-stage .section-heading{display:block;margin:0}
+.kitchen-stage .eyebrow{margin:0 0 12px;color:inherit}
+.kitchen-stage h2{font-size:clamp(36px,4.6vw,70px);line-height:1.02;letter-spacing:-.04em}
+.kitchen .dish-tabs{display:grid;grid-template-columns:repeat(4,1fr);border:0;border-bottom:1px solid #10295860;gap:24px}
+.kitchen .dish-tabs button{font:400 clamp(18px,2vw,29px)/1.2 var(--serif);padding:10px 0 16px;display:block;border:0;border-bottom:2px solid transparent;color:#102958;text-align:center}
+.kitchen .dish-tabs button>span:first-child{font:inherit}
+.kitchen .dish-tabs button[aria-selected=true]{border-bottom-color:#102958}
+.kitchen .dish-showcase{grid-template-columns:minmax(0,1.9fr) minmax(0,1fr);gap:40px;align-items:stretch;min-height:0}
+.kitchen .dish-showcase-image{height:100%;min-height:0;position:relative}
+.kitchen .dish-showcase-image img{width:100%;height:100%;object-fit:cover;opacity:1;clip-path:none;transform:none}
+.kitchen .dish-showcase-copy{display:flex;flex-direction:column;justify-content:center;gap:24px;min-width:0}
+.kitchen .image-index{position:static;background:none;padding:0;color:inherit;font-size:12px;display:flex;align-items:center;gap:24px}
+.kitchen .image-index:after{content:'';height:1px;background:#10295880;flex:1}
+.kitchen .speciality-title{font:400 clamp(30px,3.6vw,54px)/1.07 var(--serif);letter-spacing:-.04em}
+.kitchen #speciality-copy{font:400 clamp(17px,1.8vw,26px)/1.35 var(--serif);margin:0;color:inherit}
+.kitchen .dish-showcase-copy>.button{align-self:flex-start;min-width:0;margin-top:4px;border-color:#102958;color:#102958}
+.kitchen .dish-showcase-copy>.button:hover{color:white}
+.kitchen-scroll{height:400svh}
+.kitchen-scroll .kitchen-stage{position:sticky;top:0;height:100svh;min-height:0;max-height:100svh}
+@media(max-width:760px){
+ .kitchen-stage{padding:22px var(--edge);gap:16px;min-height:690px}
+ .kitchen-stage h2{font-size:clamp(27px,6.7vw,43px);line-height:1.05}
+ .kitchen-stage .eyebrow{font-size:8px;margin-bottom:8px}
+ .kitchen .dish-tabs{gap:8px}
+ .kitchen .dish-tabs button{font-size:clamp(14px,3.7vw,20px);padding:8px 0;min-height:48px}
+ .kitchen .dish-showcase{grid-template-columns:1fr;grid-template-rows:minmax(100px,1fr) auto;gap:16px}
+ .kitchen .dish-showcase-copy{gap:10px}
+ .kitchen .speciality-title{font-size:28px}
+ .kitchen #speciality-copy{font-family:var(--sans);font-size:13px;line-height:1.45;min-height:38px}
+ .kitchen .image-index{font-size:10px}
+ .kitchen .dish-showcase-copy>.button{padding:10px 18px;min-height:44px;font-size:12px;margin:2px 0 0}
+ .kitchen-scroll .kitchen-stage{height:calc(100svh - 64px);max-height:calc(100svh - 64px)}
+}
+@media(max-width:760px) and (max-height:650px){.kitchen-stage{padding-top:12px;padding-bottom:12px;gap:8px}.kitchen-stage .eyebrow{display:none}.kitchen-stage h2{font-size:25px}.kitchen .dish-showcase{gap:10px}.kitchen .dish-showcase-copy{gap:6px}.kitchen .speciality-title{font-size:24px}.kitchen #speciality-copy{font-size:12px}}
+.kitchen .dish-showcase-copy{color:#102958}
+@media(max-width:360px){.kitchen #speciality-copy{min-height:53px}}

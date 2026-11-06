@@ -46,3 +46,5 @@ Carrusel actualizado: 20 publicaciones únicas del feed de @patioelcordobes, sin
 Los enlaces de aprobación caducan tras siete días y no confirman por abrirlos: requieren pulsar el botón de la página. Los envíos usan claves de idempotencia de Resend. El sitio conserva su acceso privado; abrirlo al público requiere cambiar ese acceso. No hay confirmación de hora exacta, solo servicio de comida o cena.
 
 Las reservas se abren en un panel modal centrado, con cierre mediante Escape, botón o fondo. Las reseñas se deslizan horizontalmente y conservan los filtros de puntuación.
+
+La sección de cocina usa un recorrido de cuatro especialidades al desplazar la página: foto, categoría y texto sincronizados, con pestañas manuales y navegación de teclado. Con reducción de movimiento se desactiva el recorrido fijo. Comportamiento en `dist/kitchen.js`.
